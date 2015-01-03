@@ -1,11 +1,19 @@
 
 package org.usfirst.frc.team907.robot;
 
+import com.ni.vision.NIVision;
+import com.ni.vision.NIVision.DrawMode;
+import com.ni.vision.NIVision.Image;
+import com.ni.vision.NIVision.ShapeMode;
+
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -14,13 +22,20 @@ import edu.wpi.first.wpilibj.Talon;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
+
+// author Dinoyan
 public class Robot extends IterativeRobot {
 	RobotDrive myRobot;
 	Joystick driveStick;
 	Joystick shootStick;
 	Talon example;
+	Solenoid piston1;
+	Solenoid piston2;
 	Compressor Compressor;
 	int autoLoopCounter;
+	int session;
+	Image frame;
+	AxisCamera camera;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -30,11 +45,14 @@ public class Robot extends IterativeRobot {
     	driveStick = new Joystick(1);
     	shootStick = new Joystick(2);
     	example = new Talon(4);
-    	Compressor  = new Compressor(0);
+    	Compressor *c = new Compressor(0);
+    	piston1 = new Solenoid(1);
+    	piston2 = new Solenoid(2);
     	
-    	//Compressor.enabled()
-    	
-    
+    	// open the camera at the IP address assigned. This is the IP address that the camera
+        // can be accessed through the web interface.
+    	camera = new AxisCamera("10.1.91.100");
+        frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
     }
 
     /**
@@ -55,10 +73,30 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	myRobot.arcadeDrive(driveStick);
+    //Drive Train
+    myRobot.arcadeDrive(driveStick);
     	
-    	
+    // Upper Mag
+   /* if(shootStick.getRawButton(1)); {
+    	piston2.set(true);
+    	piston1.set(false); 
+    	}
+    else if(shootStick.getRawButton(2)); {
+    	piston2.set(false);
+    	piston1.set(true); 
+    		
     }
+   */
+    
+    //Camera Code.
+    NIVision.Rect rect = new NIVision.Rect(10, 10, 100, 100);
+    camera.getImage(frame);
+    NIVision.imaqDrawShapeOnImage(frame, frame, rect,
+            DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 0.0f);
+
+    CameraServer.getInstance().setImage(frame);
+    	
+} 
     
     /**
      * This function is called periodically during test mode
