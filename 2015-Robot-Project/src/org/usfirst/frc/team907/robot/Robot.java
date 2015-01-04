@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.vision.AxisCamera;
  * directory.
  */
 
-// author Dinoyan
+// Author Dinoyan
 public class Robot extends IterativeRobot {
 	RobotDrive myRobot;
 	Joystick driveStick;
@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot {
     	
     	// open the camera at the IP address assigned. This is the IP address that the camera
         // can be accessed through the web interface.
-    	camera = new AxisCamera("10.1.91.100");
+    	camera = new AxisCamera("10.9.7.2");
         frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
     }
 
@@ -76,21 +76,25 @@ public class Robot extends IterativeRobot {
     //Drive Train
     myRobot.arcadeDrive(driveStick);
     	
-    // Upper Mag
+    // Upper mechanism
     
     //Talon example
-    if(shootStick.getRawButton(1));{
+    if(shootStick.getRawButton(1)){
     	example.set(0.50);
+    }else if(shootStick.getRawButton(2)){
+    	example.set(1);
     }
-    
- 
+    else{
+    	example.set(0.0);
+    }
+    	
     
     // Solenoid code example
-    if(shootStick.getRawButton(2));{
+    if(shootStick.getRawButton(3)){
     	piston1.set(true);
     	piston2.set(false);	
     } 
-    if(shootStick.getRawButton(3));{
+    else if(shootStick.getRawButton(4)){
     	piston1.set(false);
     	piston2.set(true);
     }
