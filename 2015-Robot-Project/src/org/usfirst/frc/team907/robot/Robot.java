@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	Talon example;
 	Solenoid piston1;
 	Solenoid piston2;
-	Compressor Compressor;
+	Compressor mainCompressor;
 	int autoLoopCounter;
 	int session;
 	Image frame;
@@ -45,7 +45,7 @@ public class Robot extends IterativeRobot {
     	driveStick = new Joystick(1);
     	shootStick = new Joystick(2);
     	example = new Talon(4);
-    	Compressor *c = new Compressor(0);
+    	mainCompressor  = new Compressor(0);
     	piston1 = new Solenoid(1);
     	piston2 = new Solenoid(2);
     	
@@ -77,16 +77,25 @@ public class Robot extends IterativeRobot {
     myRobot.arcadeDrive(driveStick);
     	
     // Upper Mag
-   /* if(shootStick.getRawButton(1)); {
-    	piston2.set(true);
-    	piston1.set(false); 
-    	}
-    else if(shootStick.getRawButton(2)); {
-    	piston2.set(false);
-    	piston1.set(true); 
-    		
+    
+    //Talon example
+    if(shootStick.getRawButton(1));{
+    	example.set(0.50);
     }
-   */
+    
+ 
+    
+    // Solenoid code example
+    if(shootStick.getRawButton(2));{
+    	piston1.set(true);
+    	piston2.set(false);	
+    } 
+    if(shootStick.getRawButton(3));{
+    	piston1.set(false);
+    	piston2.set(true);
+    }
+    
+    
     
     //Camera Code.
     NIVision.Rect rect = new NIVision.Rect(10, 10, 100, 100);
