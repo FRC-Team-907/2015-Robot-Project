@@ -5,7 +5,6 @@ import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.DrawMode;
 import com.ni.vision.NIVision.Image;
 import com.ni.vision.NIVision.ShapeMode;
-
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -22,8 +21,10 @@ import edu.wpi.first.wpilibj.vision.AxisCamera;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-
-// Author Dinoyan
+ /**
+ *
+ * @author Dinoyan
+ */
 public class Robot extends IterativeRobot {
 	RobotDrive myRobot;
 	Joystick driveStick;
@@ -41,31 +42,32 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	myRobot = new RobotDrive(0,1,2,3);
-    	driveStick = new Joystick(1);
-    	shootStick = new Joystick(2);
-    	example = new Talon(4);
-    	mainCompressor  = new Compressor(0);
-    	piston1 = new Solenoid(1);
-    	piston2 = new Solenoid(2);
+   
+    myRobot = new RobotDrive(0,1,2,3);
+    driveStick = new Joystick(1);
+    shootStick = new Joystick(2);
+    example = new Talon(4);
+    mainCompressor  = new Compressor(0);
+    piston1 = new Solenoid(1);
+    piston2 = new Solenoid(2);
     	
-    	// open the camera at the IP address assigned. This is the IP address that the camera
-        // can be accessed through the web interface.
-    	camera = new AxisCamera("10.9.7.2");
-        frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+    // open the camera at the IP address assigned. This is the IP address that the camera
+    // can be accessed through the web interface.
+    camera = new AxisCamera("10.9.7.11");
+    frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	if(autoLoopCounter < 100)    //Loop for 2 seconds
-    	{	
-    		myRobot.drive(-0.5, 0.0);  // drive forward half speed
-    		autoLoopCounter++;
-    		} else {
-    			myRobot.drive(0.0, 0.0);  // Stop
-    		}
+    if(autoLoopCounter < 100)    //Loop for 2 seconds
+    {	
+    	myRobot.drive(-0.5, 0.0);  // drive forward half speed
+    	autoLoopCounter++;
+    }else {
+    	myRobot.drive(0.0, 0.0);  // Stop
+    	}
 
     }
 
@@ -73,12 +75,13 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    //Drive Train
+    //DRIVE TRAIN (ARCADE)
     myRobot.arcadeDrive(driveStick);
     	
-    // Upper mechanism
     
-    //Talon example
+    // UPPER MECHANISAM
+    //--------------------------------------------------------------------------------------  
+    // SPEED CONTROLLER EX
     if(shootStick.getRawButton(1)){
     	example.set(0.50);
     }else if(shootStick.getRawButton(2)){
@@ -87,9 +90,10 @@ public class Robot extends IterativeRobot {
     else{
     	example.set(0.0);
     }
+    //-------------------------------------------------------------------------------------- 
     	
-    
-    // Solenoid code example
+    //-------------------------------------------------------------------------------------- 
+    // SOLENOID EX
     if(shootStick.getRawButton(3)){
     	piston1.set(true);
     	piston2.set(false);	
@@ -98,17 +102,16 @@ public class Robot extends IterativeRobot {
     	piston1.set(false);
     	piston2.set(true);
     }
+    //-------------------------------------------------------------------------------------- 
     
-    
-    
-    //Camera Code.
+    //-------------------------------------------------------------------------------------- 
+    //AXIS CAMERA
     NIVision.Rect rect = new NIVision.Rect(10, 10, 100, 100);
     camera.getImage(frame);
     NIVision.imaqDrawShapeOnImage(frame, frame, rect,
             DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 0.0f);
-
     CameraServer.getInstance().setImage(frame);
-    	
+    //-------------------------------------------------------------------------------------- 	
 } 
     
     /**
