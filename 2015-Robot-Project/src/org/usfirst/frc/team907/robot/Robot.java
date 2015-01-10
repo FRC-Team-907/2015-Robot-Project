@@ -22,21 +22,23 @@ import edu.wpi.first.wpilibj.vision.AxisCamera;
  * directory.
  */
  /**
- *
+ * FRC team 907. 2015 Recycle Rush code. 
  * @author Dinoyan
  */
 public class Robot extends IterativeRobot {
-	RobotDrive myRobot;
-	Joystick driveStick;
-	Joystick shootStick;
-	Talon example;
-	Solenoid piston1;
-	Solenoid piston2;
-	Compressor mainCompressor;
-	int autoLoopCounter;
-	int session;
+	public RobotDrive myRobot;
+	public Joystick driveStick;
+	public Joystick shootStick;
+	public Talon example;
+	public Solenoid piston1;
+	public Solenoid piston2;
+	public Compressor mainCompressor;
+	public int autoLoopCounter;
+	public int session;
 	Image frame;
 	AxisCamera camera;
+	
+	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -65,20 +67,25 @@ public class Robot extends IterativeRobot {
     {	
     	myRobot.drive(-0.5, 0.0);  // drive forward half speed
     	autoLoopCounter++;
-    }else {
+    }
+    if(autoLoopCounter <10)
+    {
+    	myRobot.drive(-0.1, 0.0);
+    }
+    else  {
     	myRobot.drive(0.0, 0.0);  // Stop
     	}
-
+    
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    //DRIVE TRAIN (ARCADE)
+    //Drive Train
     myRobot.arcadeDrive(driveStick);
     	
-    
+    	
     // UPPER MECHANISAM
     //--------------------------------------------------------------------------------------  
     // SPEED CONTROLLER EX
