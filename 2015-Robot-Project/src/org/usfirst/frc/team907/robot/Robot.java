@@ -5,6 +5,7 @@ import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.DrawMode;
 import com.ni.vision.NIVision.Image;
 import com.ni.vision.NIVision.ShapeMode;
+
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -12,6 +13,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.vision.AxisCamera;
 
 /**
@@ -37,6 +40,7 @@ public class Robot extends IterativeRobot {
 	public int session;
 	Image frame;
 	AxisCamera camera;
+	int joystickChannel;
 	
 	
     /**
@@ -44,7 +48,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-   
+  
     myRobot = new RobotDrive(0,1,2,3);
     driveStick = new Joystick(1);
     shootStick = new Joystick(2);
@@ -52,6 +56,16 @@ public class Robot extends IterativeRobot {
     mainCompressor  = new Compressor(0);
     piston1 = new Solenoid(1);
     piston2 = new Solenoid(2);
+    
+    // Channels for the wheels
+    final int frontLeftChannel	= 2;
+    final int rearLeftChannel	= 3;
+    final int frontRightChannel	= 1;
+    final int rearRightChannel	= 0;
+    myRobot.setExpiration(0.1);
+    myRobot = new RobotDrive(frontLeftChannel, rearLeftChannel, frontRightChannel, rearRightChannel);
+    myRobot.setInvertedMotor(MotorType.kFrontLeft, true);	// invert the left side motors
+    myRobot.setInvertedMotor(MotorType.kRearLeft, true);		// you may need to change or remove this to match your robot   
     	
     // open the camera at the IP address assigned. This is the IP address that the camera
     // can be accessed through the web interface.
@@ -83,9 +97,16 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     //Drive Train
-    myRobot.arcadeDrive(driveStick);
+    // Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
+    // This sample does not use field-oriented drive, so the gyro input is set to zero.
+    myRobot.mecanumDrive_Cartesian(driveStick.getX(), driveStick.getY(), driveStick.getZ(), 0);
+        
+    Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles
     	
     	
+    
+    
+    
     // UPPER MECHANISAM
     //--------------------------------------------------------------------------------------  
     // SPEED CONTROLLER EX
