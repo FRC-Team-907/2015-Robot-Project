@@ -1,2 +1,2 @@
-# 2015-Robot-Project
-2015 Team 907 Robot Code
+# 2015 Robot
+Code for the 2015 FRC robot.
