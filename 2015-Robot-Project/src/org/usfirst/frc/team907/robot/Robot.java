@@ -65,7 +65,7 @@ public class Robot extends IterativeRobot {
     myRobot.setExpiration(0.1);
     myRobot = new RobotDrive(frontLeftChannel, rearLeftChannel, frontRightChannel, rearRightChannel);
     myRobot.setInvertedMotor(MotorType.kFrontLeft, true);	// invert the left side motors
-    myRobot.setInvertedMotor(MotorType.kRearLeft, true);		// you may need to change or remove this to match your robot   
+    myRobot.setInvertedMotor(MotorType.kRearLeft, true);	 
     	
     // open the camera at the IP address assigned. This is the IP address that the camera
     // can be accessed through the web interface.
@@ -97,16 +97,11 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     //Drive Train
-    // Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
-    // This sample does not use field-oriented drive, so the gyro input is set to zero.
-    myRobot.mecanumDrive_Cartesian(driveStick.getX(), driveStick.getY(), driveStick.getZ(), 0);
-        
-    Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles
+    myRobot.mecanumDrive_Cartesian(driveStick.getX(), driveStick.getY(), driveStick.getZ(), 0);   
+    Timer.delay(0.005);	
     	
     	
-    
-    
-    
+
     // UPPER MECHANISAM
     //--------------------------------------------------------------------------------------  
     // SPEED CONTROLLER EX
