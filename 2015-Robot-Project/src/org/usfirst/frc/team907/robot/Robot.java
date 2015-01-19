@@ -96,7 +96,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    //Drive Train
+    //Drive Train mecanum 
     myRobot.mecanumDrive_Cartesian(driveStick.getX(), driveStick.getY(), driveStick.getZ(), 0);   
     Timer.delay(0.005);	
     	
@@ -134,8 +134,17 @@ public class Robot extends IterativeRobot {
     NIVision.imaqDrawShapeOnImage(frame, frame, rect,
             DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 0.0f);
     CameraServer.getInstance().setImage(frame);
-    //-------------------------------------------------------------------------------------- 	
-} 
+    //-------------------------------------------------------------------------------------- 	 
+    
+    if(autoLoopCounter <10 && shootStick.getRawButton(5)){
+    	
+    	//Do something here
+    	
+    	
+    }
+    //-------------------------------------------------------------------------------------- 
+}
+    
     
     /**
      * This function is called periodically during test mode
