@@ -1,156 +1,117 @@
-
 package org.usfirst.frc.team907.robot;
 
-import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.DrawMode;
-import com.ni.vision.NIVision.Image;
-import com.ni.vision.NIVision.ShapeMode;
 
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
-import edu.wpi.first.wpilibj.vision.AxisCamera;
+import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
- /**
- * FRC team 907. 2015 Recycle Rush code. 
- * @author Dinoyan
- */
-public class Robot extends IterativeRobot {
-	public RobotDrive myRobot;
-	public Joystick driveStick;
-	public Joystick shootStick;
-	public Talon example;
-	public Solenoid piston1;
-	public Solenoid piston2;
-	public Compressor mainCompressor;
-	public int autoLoopCounter;
-	public int session;
-	Image frame;
-	AxisCamera camera;
-	int joystickChannel;
-	
-	
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
-    public void robotInit() {
-  
-    myRobot = new RobotDrive(0,1,2,3);
-    driveStick = new Joystick(1);
-    shootStick = new Joystick(2);
-    example = new Talon(4);
-    mainCompressor  = new Compressor(0);
-    piston1 = new Solenoid(1);
-    piston2 = new Solenoid(2);
-    
-    // Channels for the wheels
-    final int frontLeftChannel	= 2;
-    final int rearLeftChannel	= 3;
-    final int frontRightChannel	= 1;
-    final int rearRightChannel	= 0;
-    myRobot.setExpiration(0.1);
-    myRobot = new RobotDrive(frontLeftChannel, rearLeftChannel, frontRightChannel, rearRightChannel);
-    myRobot.setInvertedMotor(MotorType.kFrontLeft, true);	// invert the left side motors
-    myRobot.setInvertedMotor(MotorType.kRearLeft, true);	 
-    	
-    // open the camera at the IP address assigned. This is the IP address that the camera
-    // can be accessed through the web interface.
-    camera = new AxisCamera("10.9.7.11");
-    frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-    }
 
-    /**
-     * This function is called periodically during autonomous
-     */
-    public void autonomousPeriodic() {
-    if(autoLoopCounter < 100)    //Loop for 2 seconds
-    {	
-    	myRobot.drive(-0.5, 0.0);  // drive forward half speed
-    	autoLoopCounter++;
-    }
-    if(autoLoopCounter <10)
-    {
-    	myRobot.drive(-0.1, 0.0);
-    }
-    else  {
-    	myRobot.drive(0.0, 0.0);  // Stop
-    	}
-    
-    }
+public class Robot extends SampleRobot {
 
-    /**
-     * This function is called periodically during operator control
-     */
-    public void teleopPeriodic() {
-    //Drive Train mecanum 
-    myRobot.mecanumDrive_Cartesian(driveStick.getX(), driveStick.getY(), driveStick.getZ(), 0);   
-    Timer.delay(0.005);	
-    	
-    	
+	RobotDrive robotDrive;
+	Joystick stick;
+	Joystick upper;
+	public Jaguar lifter1Jaguar;
+	public Jaguar lifter2Jaguar;
 
-    // UPPER MECHANISAM
-    //--------------------------------------------------------------------------------------  
-    // SPEED CONTROLLER EX
-    if(shootStick.getRawButton(1)){
-    	example.set(0.50);
-    }else if(shootStick.getRawButton(2)){
-    	example.set(1);
-    }
-    else{
-    	example.set(0.0);
-    }
-    //-------------------------------------------------------------------------------------- 
-    	
-    //-------------------------------------------------------------------------------------- 
-    // SOLENOID EX
-    if(shootStick.getRawButton(3)){
-    	piston1.set(true);
-    	piston2.set(false);	
-    } 
-    else if(shootStick.getRawButton(4)){
-    	piston1.set(false);
-    	piston2.set(true);
-    }
-    //-------------------------------------------------------------------------------------- 
-    
-    //-------------------------------------------------------------------------------------- 
-    //AXIS CAMERA
-    NIVision.Rect rect = new NIVision.Rect(10, 10, 100, 100);
-    camera.getImage(frame);
-    NIVision.imaqDrawShapeOnImage(frame, frame, rect,
-            DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 0.0f);
-    CameraServer.getInstance().setImage(frame);
-    //-------------------------------------------------------------------------------------- 	 
-    
-    if(autoLoopCounter <10 && shootStick.getRawButton(5)){
-    	
-    	//Do something here
-    	
-    	
-    }
-    //-------------------------------------------------------------------------------------- 
-}
-    
-    
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-    
-    }
-    
+
+	// Channels for the wheels
+	final int frontLeftChannel	= 2;
+	final int rearLeftChannel	= 3;
+	final int frontRightChannel	= 1;
+	final int rearRightChannel	= 0;
+
+	// The channel on the driver station that the joystick is connected to
+	final int joystickChannel	= 0;
+
+	public Robot() {
+		robotDrive = new RobotDrive(frontLeftChannel, rearLeftChannel, frontRightChannel, rearRightChannel);
+		robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);	// invert the left side motors
+		robotDrive.setInvertedMotor(MotorType.kRearLeft, true);		// you may need to change or remove this to match your robot
+		robotDrive.setExpiration(0.1);
+
+		stick = new Joystick(joystickChannel);
+		upper = new Joystick(1);
+		lifter1Jaguar = new Jaguar(4);
+		lifter2Jaguar = new Jaguar(5);
+	}
+
+
+	/**
+	 * Tele-Op mode
+	 * Drive the robot using the joystick, and raise/lower the elevator with the other joystick
+	 */
+	public void operatorControl() {
+		robotDrive.setSafetyEnabled(true);
+		while (isOperatorControl() && isEnabled()) {
+
+			// Square the values of the joystick, while preserving the sign (positive or negative)
+			// This is done to improve driving
+			double forwardSpeed = Math.copySign((stick.getRawAxis(0)*stick.getRawAxis(0)),stick.getRawAxis(0));
+			double strafeSpeed = Math.copySign((stick.getRawAxis(1)*stick.getRawAxis(1)),stick.getRawAxis(1));
+			double turnSpeed = -1*Math.copySign((stick.getRawAxis(4)*stick.getRawAxis(4)), stick.getRawAxis(4));
+
+			SmartDashboard.putNumber("Forward", forwardSpeed);
+			SmartDashboard.putNumber("Strafe", strafeSpeed);
+			SmartDashboard.putNumber("Turn", turnSpeed);
+
+
+			// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
+			// This sample does not use field-oriented drive, so the gyro input is set to zero.            
+			robotDrive.mecanumDrive_Cartesian(forwardSpeed, strafeSpeed, turnSpeed, 0.0);
+
+
+			// Set the speed of the lifter Jaguars to the joystick position
+			lifter1Jaguar.set(upper.getRawAxis(1));
+			lifter2Jaguar.set(upper.getRawAxis(1));
+
+
+			Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles
+		}
+	}
+
+
+	/**
+	 * Autonomous mode
+	 * Drive forwards for the specified time at the specified speed, and then stop
+	 */
+	public void autonomous(){
+		// These are likely good values to start with, but you should test them
+		// out and adjust the numbers as needed.
+		// `Timeout` is how long the robot will drive for, in seconds.
+		// `Speed` is the speed at which to drive, in the range [-1.0, 1.0]
+		double timeout = 2.5;
+		double speed = 0.35;
+
+		robotDrive.setInvertedMotor(MotorType.kFrontLeft, false);
+		robotDrive.setInvertedMotor(MotorType.kRearLeft, false);
+
+
+		// Setup the timer, which will be used to count up to 5 seconds
+		Timer m_timer = new Timer();
+		m_timer.reset();		// Reset the gyro to 0 sec
+		m_timer.start();		// Start counting up on the timer
+
+
+		// While the robot is in autonomous mode AND the timer is less that 5 seconds...
+		while (isAutonomous() && isEnabled() && m_timer.get() < timeout) {
+
+			// Drive forwards with no turning
+			robotDrive.drive(speed, 0);
+			// Delay for a bit so that we don't overload the CPU
+			Timer.delay(0.001);
+		}
+
+		// After the 5 seconds is up, stop driving and turn off the timer.
+		robotDrive.drive(0, 0);
+		m_timer.stop();
+
+		robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
+		robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
+	}
+
 }
