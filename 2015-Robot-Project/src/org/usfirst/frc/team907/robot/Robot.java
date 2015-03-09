@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * FRC team 907. 2015 Recycle Rush code. 
+ * @author Dinoyan
+ */
+
 
 public class Robot extends SampleRobot {
 
@@ -49,32 +54,34 @@ public class Robot extends SampleRobot {
 		robotDrive.setSafetyEnabled(true);
 		while (isOperatorControl() && isEnabled()) {
 
-			// Square the values of the joystick, while preserving the sign (positive or negative)
-			// This is done to improve driving
-			double forwardSpeed = Math.copySign((stick.getRawAxis(0)*stick.getRawAxis(0)),stick.getRawAxis(0));
-			double strafeSpeed = Math.copySign((stick.getRawAxis(1)*stick.getRawAxis(1)),stick.getRawAxis(1));
-			double turnSpeed = -1*Math.copySign((stick.getRawAxis(4)*stick.getRawAxis(4)), stick.getRawAxis(4));
+		// Square the values of the joystick, while preserving the sign (positive or negative)
+		// This is done to improve driving
+		double forwardSpeed = Math.copySign((stick.getRawAxis(0)*stick.getRawAxis(0)),stick.getRawAxis(0));
+		double strafeSpeed = Math.copySign((stick.getRawAxis(1)*stick.getRawAxis(1)),stick.getRawAxis(1));
+		double turnSpeed = -1*Math.copySign((stick.getRawAxis(4)*stick.getRawAxis(4)), stick.getRawAxis(4));
 
-			SmartDashboard.putNumber("Forward", forwardSpeed);
-			SmartDashboard.putNumber("Strafe", strafeSpeed);
-			SmartDashboard.putNumber("Turn", turnSpeed);
-
-
-			// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
-			// This sample does not use field-oriented drive, so the gyro input is set to zero.            
-			robotDrive.mecanumDrive_Cartesian(forwardSpeed, strafeSpeed, turnSpeed, 0.0);
+		SmartDashboard.putNumber("Forward", forwardSpeed);
+		SmartDashboard.putNumber("Strafe", strafeSpeed);
+		SmartDashboard.putNumber("Turn", turnSpeed);
 
 
-			// Set the speed of the lifter Jaguars to the joystick position
-			lifter1Jaguar.set(upper.getRawAxis(1));
-			lifter2Jaguar.set(upper.getRawAxis(1));
+		// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
+		// This sample does not use field-oriented drive, so the gyro input is set to zero.            
+		robotDrive.mecanumDrive_Cartesian(forwardSpeed, strafeSpeed, turnSpeed, 0.0);
 
 
-			Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles
+		// Set the speed of the lifter Jaguars to the joystick position
+		lifter1Jaguar.set(upper.getRawAxis(1));
+		lifter2Jaguar.set(upper.getRawAxis(1));
+
+
+		Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles
 		}
 	}
 
 
+	
+	
 	/**
 	 * Autonomous mode
 	 * Drive forwards for the specified time at the specified speed, and then stop
@@ -100,10 +107,10 @@ public class Robot extends SampleRobot {
 		// While the robot is in autonomous mode AND the timer is less that 5 seconds...
 		while (isAutonomous() && isEnabled() && m_timer.get() < timeout) {
 
-			// Drive forwards with no turning
-			robotDrive.drive(speed, 0);
-			// Delay for a bit so that we don't overload the CPU
-			Timer.delay(0.001);
+		// Drive forwards with no turning
+		robotDrive.drive(speed, 0);
+		// Delay for a bit so that we don't overload the CPU
+		Timer.delay(0.001);
 		}
 
 		// After the 5 seconds is up, stop driving and turn off the timer.
